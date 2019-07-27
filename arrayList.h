@@ -1,61 +1,72 @@
-#include <stdlib.h>
+﻿#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
-struct ArrayList_ {
 
-    void** array;  //array of generic type
-    int lastIndex;
-    int size;
+typedef struct ArrayList
+{
+	// Полезная нагрузка.
+	void ** array;
+	// Количество элементов, доступных для взаимодействия.
+	size_t length;
+	// Количество доступного места в листе.
+	size_t capacity;
+} * ArrayList;
 
-};
 
-typedef struct ArrayList_ ArrayList;
+/*
+Создание в оперативной памяти места для листа.
+*/
+ArrayList ArrayList_malloc()
+{
+	ArrayList arrayList = (ArrayList) malloc(sizeof(struct ArrayList));
 
-ArrayList * initArrayList() {
+	if (arrayList == NULL)
+		return NULL;
 
-    ArrayList *arrayList = ( ArrayList* ) malloc( sizeof( ArrayList ) );
+	arrayList->length = 0;
+	arrayList->capacity = 1;
 
-    arrayList->array = (void**)malloc(3 * sizeof(void*));
+	arrayList->array = (void**) malloc(arrayList->capacity * sizeof(void*));
 
-    arrayList->lastIndex = 0;
-    arrayList->size = 3;
+	if (arrayList->array == NULL)
+	{
+		free(arrayList);
+		return NULL;
+	}
 
-    return arrayList;
-
+	return arrayList;
 }
 
-void *destroyArrayList( ArrayList * arrayList ) {
-
-    free(arrayList->array);
-    free(arrayList);
-
+/*
+Очистка листа из памяти.
+*/
+void ArrayList_free(ArrayList arrayList)
+{
+	if (arrayList != NULL)
+	{
+		if(arrayList->array != NULL)
+			free(arrayList->array);
+		free(arrayList);
+	}
 } 
 
-ArrayList *appendArrayList( ArrayList * arrayList, void * element ) {
-
-    if ( arrayList->lastIndex == arrayList->size - 1 ) {
-        printf("INDEX %d\n", arrayList->lastIndex);
-        arrayList->array = realloc( arrayList->array, 2* sizeof(arrayList->array) * sizeof(void*));
-    }
-
-    arrayList->array[arrayList->lastIndex] = element;
-    arrayList->lastIndex++;
-
-    return arrayList;
-
+/*
+Добавить элемент в лист.
+Возвращает: код ошибки.
+			1 - Нехватка памяти. Операция отменена.
+*/
+int ArrayList_add(ArrayList arrayList, void * element )
+{
+	if (arrayList->length == arrayList->capacity - 1)
+	{
+		void ** buffer;
+		if ((buffer = realloc(arrayList->array, 2u * arrayList->capacity * sizeof(void*))) == NULL)
+			return 1;
+		arrayList->array = buffer;
+		arrayList->capacity *= 2;
+	}
+	arrayList->array[arrayList->length++] = element;
+	return 0;
 }
-
-/**
- * 
- */
-
-/*StringArray *concat( StringArray * array, char character ) {
-
-    array->string[array->lastIndex] = character;
-    array->lastIndex++;
-
-    return array;
-
-} */

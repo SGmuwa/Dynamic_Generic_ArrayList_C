@@ -1,26 +1,22 @@
-#include "arrayList.h"
+﻿#include "arrayList.h"
 
 int main(int argc, char **argv) {
 
-    //ArrayList *arrayList;
+	//ArrayList *arrayList;
 
-    ArrayList *array = initArrayList();
-    
-    int one = 1;
-    int two = 2;
-    int three = 3;
-    int four = 4;
+	ArrayList list = ArrayList_malloc();
+	
+	int one = 1;
+	int two = 2;
+	int three = 3;
+	int four = 4;
 
-    appendArrayList(array, &one);
-    appendArrayList(array, &two);
-    appendArrayList(array, &three);
-    appendArrayList(array, &four);
+	ArrayList_add(list, &one);
+	ArrayList_add(list, &two);
+	ArrayList_add(list, &three);
+	ArrayList_add(list, &four);
 
-
-    //printf("%d\n", *(int *)(array->array[3]));
-
-    /*printf("%d\n", *(int *)(array->array[2]));*/
-
-    destroyArrayList(array);
-
+	for (size_t i = 0; i < list->length; i++)
+		printf("%d ", *(int*)list->array[i]);
+	ArrayList_free(list);
 }
