@@ -22,6 +22,12 @@ int main(int argc, char **argv) {
 	four = 8;
 
 	for (size_t i = 0; i < list->length; i++)
-		printf("%d ", ((int*)list->array)[i]);
+	{
+		int buffer;
+		if (ArrayList_get(list, i, &buffer))
+			return i + 1;
+		printf("%d ", buffer);
+	}
 	ArrayList_free(list);
+	return 0;
 }

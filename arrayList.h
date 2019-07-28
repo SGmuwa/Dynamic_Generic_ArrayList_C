@@ -89,6 +89,35 @@ int ArrayList_set(ArrayList this, size_t index, void * element)
 }
 
 /*
+Получает значение элемента по индексу.
+Возвращает: код ошибки.
+			0 - Значение получено.
+			1 - Отправленный лист имеет нулевой указатель.
+			2 - Указатель массива листа равен NULL.
+			3 - Индекс вне диапазона листа.
+			4 - Копирование в область NULL запрещено.
+			5 - memcpy_s обнаружил ошибку.
+*/
+int ArrayList_get(ArrayList this, size_t index, void * output)
+{
+	if (this == NULL)
+		return 1;
+	if (this->array == NULL)
+		return 2;
+	if (index >= this->length)
+		return 3;
+	if (output == NULL)
+		return 4;
+#ifdef _MSC_VER
+	if (memcpy_s(output, (this->capacity - index) * this->sizeType, (char*)this->array + index * this->sizeType, this->sizeType))
+		return 5;
+#else
+	memcpy(output, (char*)this->array + index * this->sizeType, this->sizeType);
+#endif // _MSC_VER
+	return 0;
+}
+
+/*
 Добавить элемент в лист.
 Возвращает: код ошибки.
 			1 - Нехватка памяти. Операция отменена.
