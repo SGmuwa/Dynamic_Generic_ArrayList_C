@@ -10,9 +10,9 @@ typedef struct ArrayList
 	void * array;
 	// Количество элементов, доступных для взаимодействия.
 	size_t length;
-	// Количество доступного места в листе.
+	// Количество доступного места в списке.
 	size_t capacity;
-	// Размер одного элемента листа. Размер хранимого типа.
+	// Размер одного элемента списка. Размер хранимого типа.
 	size_t sizeType;
 } * ArrayList;
 
@@ -22,13 +22,13 @@ enum ArrayList_err
 {
 	// Ошибка отсутсвует.
 	ArrayList_err_ok = 0,
-	// Указатель на лист равен NULL.
+	// Указатель на список равен NULL.
 	ArrayList_err_listNull,
-	// Указатель на массив листа равен NULL.
+	// Указатель на массив списка равен NULL.
 	ArrayList_err_list_arrayNull,
 	// Не хватает памяти.
 	ArrayList_err_outOfMemory,
-	// Для текущей архитектуры такой размер листа невозможен.
+	// Для текущей архитектуры такой размер списка невозможен.
 	ArrayList_err_lengthIsTooBig,
 	// Индекс вне диапазона списка.
 	ArrayList_err_outsideList,
@@ -50,8 +50,8 @@ enum ArrayList_err
 
 
 /*
-Создание в оперативной памяти места для листа.
-size_t sizeType - размер одного элемента листа. Размер хранимого типа.
+Создание в оперативной памяти места для списка.
+size_t sizeType - размер одного элемента списка. Размер хранимого типа.
 */
 ArrayList ArrayList_malloc(size_t sizeType)
 {
@@ -79,7 +79,7 @@ ArrayList ArrayList_malloc(size_t sizeType)
 }
 
 /*
-Очистка листа из памяти.
+Очистка списка из памяти.
 */
 void ArrayList_free(ArrayList arrayList)
 {
@@ -92,10 +92,10 @@ void ArrayList_free(ArrayList arrayList)
 }
 
 /*
-Проверяет, чтобы места хватало в листе под новое количество элементов.
-Если в листе не хватает места, то выделяется дополнительная память.
-ArrayList this - Лист, который надо подготовить.
-size_t needLength - Указывает, сколько элементов нужно листу.
+Проверяет, чтобы места хватало в списке под новое количество элементов.
+Если в списке не хватает места, то выделяется дополнительная память.
+ArrayList this - Список, который надо подготовить.
+size_t needLength - Указывает, сколько элементов нужно списку.
 Возвращает: код ошибки ArrayList_err_listNull, ArrayList_err_list_arrayNull, ArrayList_err_outOfMemory, ArrayList_err_ok
 */
 enum ArrayList_err ArrayList_prepareCapacity(ArrayList this, size_t needLength)
@@ -118,8 +118,8 @@ enum ArrayList_err ArrayList_prepareCapacity(ArrayList this, size_t needLength)
 }
 
 /*
-Безопасно изменяет длинну листа.
-ArrayList this - Лист, в котором надо прибавить длинну.
+Безопасно изменяет длинну списка.
+ArrayList this - Список, в котором надо прибавить длинну.
 size_t addToLength - Слагаемое. Сколько нужно прибавить к текущей длине?
 Возвращает: код ошибки ArrayList_err_listNull, ArrayList_err_list_arrayNull, ArrayList_err_lengthIsTooBig, ArrayList_err_outOfMemory, ArrayList_err_ok
 */
@@ -138,13 +138,13 @@ enum ArrayList_err ArrayList_prepareLength(ArrayList this, size_t addToLength)
 }
 
 /*
-Приравнивает размер вмещения элемента листа к количеству элементов.
+Приравнивает размер вмещения элемента списка к количеству элементов.
 Эту функцию необходимо вызывать в случае, если Вы
-не собираетесь добавлять новые данные в лист.
-ArrayList this - лист, который надо очистить.
+не собираетесь добавлять новые данные в список.
+ArrayList this - список, который надо очистить.
 Возвращает: код ошибки ArrayList_err_listNull, ArrayList_err_list_arrayNull, ArrayList_err_ok, ArrayList_err_outOfMemory
 */
-enum ArrayList_err ArrayList_removeTrash(ArrayList this)
+int ArrayList_removeTrash(ArrayList this)
 {
 	if (this == NULL)
 		return ArrayList_err_listNull;
@@ -216,7 +216,7 @@ ArrayList this - Список, куда надо добавить элемент
 void * element - Указатель на элемент, который надо поместить в список последним.
 Возвращает: код ошибки ArrayList_err_ok, ArrayList_err_set, ArrayList_err_prepareLength, ArrayList_err_copyFromNull, ArrayList_err_list_arrayNull, ArrayList_err_listNull
 */
-enum ArrayList_err ArrayList_addLast(ArrayList this, void * element)
+int ArrayList_addLast(ArrayList this, void * element)
 {
 	if (this == NULL)
 		return ArrayList_err_listNull;
@@ -237,7 +237,7 @@ enum ArrayList_err ArrayList_addLast(ArrayList this, void * element)
 /*
 Помещает элемент на указанный индекс. Тот элемент, который раньше был по этому
 индексу перемещается вперёд, как и последующие элементы.
-ArrayList this - Лист, в который надо добавить элемент.
+ArrayList this - Список, в который надо добавить элемент.
 size_t index - Место, куда надо добавить элемент.
 void * element - Указатель на элемент, который надо добавить.
 Возвращает: код ошибки ArrayList_err_ok, ArrayList_err_addLast, ArrayList_err_set, ArrayList_err_memmove_s, ArrayList_err_outsideList, ArrayList_err_prepareLength, ArrayList_err_copyFromNull, ArrayList_err_list_arrayNull, ArrayList_err_listNull
@@ -279,8 +279,8 @@ enum ArrayList_err ArrayList_add(ArrayList this, size_t index, void * element)
 }
 
 /*
-Удаляет элемент из листа по его индексу.
-ArrayList this - Лист, из которого нужно исключить элемент.
+Удаляет элемент из списка по его индексу.
+ArrayList this - Список, из которого нужно исключить элемент.
 size_t index - Номер элемента, который необходимо освободить.
 Возвращает: код ошибки ArrayList_err_ok, ArrayList_err_memmove_s, ArrayList_err_outsideList, ArrayList_err_list_arrayNull, ArrayList_err_listNull
 */
