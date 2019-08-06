@@ -1,4 +1,5 @@
-﻿#include <stdlib.h>
+﻿#pragma once
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -216,7 +217,7 @@ ArrayList this - Список, куда надо добавить элемент
 void * element - Указатель на элемент, который надо поместить в список последним.
 Возвращает: код ошибки ArrayList_err_ok, ArrayList_err_set, ArrayList_err_prepareLength, ArrayList_err_copyFromNull, ArrayList_err_list_arrayNull, ArrayList_err_listNull
 */
-int ArrayList_addLast(ArrayList this, void * element)
+enum ArrayList_err ArrayList_addLast(ArrayList this, void * element)
 {
 	if (this == NULL)
 		return ArrayList_err_listNull;
